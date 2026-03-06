@@ -1,0 +1,544 @@
+<!-- frontend/teacher/student_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details — BVA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0b0f1a;
+            --sb: #0d1117;
+            --card: #111827;
+            --border: #1e2d40;
+            --blue: #3b82f6;
+            --green: #10b981;
+            --orange: #f59e0b;
+            --red: #ef4444;
+            --purple: #a855f7;
+            --txt: #f1f5f9;
+            --muted: #64748b;
+            --inp: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--bg);
+            color: var(--txt);
+            padding: 24px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .header .back-btn {
+            background: var(--inp);
+            border: 1px solid var(--border);
+            color: var(--txt);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.15s;
+        }
+
+        .header .back-btn:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: 0.15s;
+        }
+
+        .tab.active {
+            color: var(--blue);
+            border-bottom-color: var(--blue);
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .student-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .info-item {
+            background: var(--inp);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+
+        .info-item .label {
+            font-size: 11px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-item .value {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .video-container {
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .video-container iframe,
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 9px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .badge-g {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--green);
+        }
+
+        .badge-b {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--blue);
+        }
+
+        .badge-r {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--red);
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 9px 18px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Sora', sans-serif;
+            text-decoration: none;
+        }
+
+        .btn-p {
+            background: var(--blue);
+            color: #fff;
+        }
+
+        .btn-p:hover {
+            background: #2563eb;
+        }
+
+        .btn-g {
+            background: var(--green);
+            color: #fff;
+        }
+
+        .btn-g:hover {
+            background: #059669;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--txt);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            text-align: left;
+            padding: 8px 12px;
+            color: var(--muted);
+            font-size: 10px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(30, 45, 64, 0.5);
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: var(--muted);
+        }
+
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1e3a5f;
+            border: 1px solid var(--blue);
+            color: var(--txt);
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            display: none;
+            z-index: 9999;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1><i class="fas fa-user-graduate"></i> Student Details</h1>
+        <button class="back-btn" onclick="window.close()"><i class="fas fa-arrow-left"></i> Close Tab</button>
+    </div>
+
+    <!-- Student info card -->
+    <div class="card">
+        <div class="student-info" id="studentInfo">
+            <div class="info-item">
+                <div class="label">Name</div>
+                <div class="value" id="studentName">Loading...</div>
+            </div>
+            <div class="info-item">
+                <div class="label">Student ID</div>
+                <div class="value" id="studentId">Loading...</div>
+            </div>
+            <div class="info-item">
+                <div class="label">Group</div>
+                <div class="value" id="studentGroup">Loading...</div>
+            </div>
+            <div class="info-item">
+                <div class="label">Total Submissions</div>
+                <div class="value" id="totalSubmissions">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('video')" id="tabVideo">Video</div>
+        <div class="tab" onclick="switchTab('report')" id="tabReport">Analysis Report</div>
+        <div class="tab" onclick="switchTab('selfEval')" id="tabSelfEval">Self Evaluation</div>
+    </div>
+
+    <!-- Content areas -->
+    <div id="videoContent" class="content-area">
+        <!-- Will be populated by JS -->
+    </div>
+    <div id="reportContent" class="content-area" style="display: none;">
+        <!-- Will be populated by JS -->
+    </div>
+    <div id="selfEvalContent" class="content-area" style="display: none;">
+        <!-- Will be populated by JS -->
+    </div>
+
+    <div id="toast"></div>
+
+    <script>
+        const API = 'http://localhost:8000';
+
+        // Get student ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const studentId = urlParams.get('studentId');
+        if (!studentId) {
+            showError('No student ID provided');
+        }
+
+        // State
+        let studentData = null;
+        let submissions = [];
+        let currentSubmissionIndex = 0;
+
+        // Load data on page load
+        (async () => {
+            if (!studentId) return;
+            try {
+                await loadStudentDetails();
+                await loadSubmissions();
+                renderVideoTab();
+            } catch (e) {
+                showError(e.message);
+            }
+        })();
+
+        async function loadStudentDetails() {
+            const res = await fetch(`${API}/api/teacher/students/${studentId}/details`, {
+                credentials: 'include'
+            });
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.detail || 'Failed to load student details');
+            }
+            studentData = await res.json();
+            document.getElementById('studentName').textContent = studentData.name;
+            document.getElementById('studentId').textContent = studentData.user_id;
+            document.getElementById('studentGroup').textContent = studentData.group_name || '—';
+            document.getElementById('totalSubmissions').textContent = studentData.submission_count || 0;
+        }
+
+        async function loadSubmissions() {
+            const res = await fetch(`${API}/api/teacher/students/${studentId}/submissions`, {
+                credentials: 'include'
+            });
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.detail || 'Failed to load submissions');
+            }
+            submissions = await res.json();
+        }
+
+        function renderVideoTab() {
+            const container = document.getElementById('videoContent');
+            if (!submissions.length) {
+                container.innerHTML = '<div class="empty">No video submissions yet.</div>';
+                return;
+            }
+
+            // Simple selector for multiple submissions
+            let html = `
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-video"></i> Submitted Videos</div>
+                    <select id="submissionSelect" class="submission-select" style="width:100%; margin-bottom:16px; padding:8px; background:var(--inp); border:1px solid var(--border); border-radius:6px; color:var(--txt);">
+            `;
+            submissions.forEach((sub, idx) => {
+                html += `<option value="${idx}" ${idx === 0 ? 'selected' : ''}>${new Date(sub.created_at).toLocaleString()} - Score: ${sub.final_score || 'N/A'}</option>`;
+            });
+            html += `</select>`;
+
+            const current = submissions[currentSubmissionIndex];
+            const vimeoUrl = current.vimeo_url || null;
+            const annotatedVideo = current.annotated_video_filename ? `${API}/api/download-annotated-video/${current.annotated_video_filename}` : null;
+
+            html += `<div class="video-container">`;
+            if (vimeoUrl) {
+                const vimeoMatch = vimeoUrl.match(/vimeo\.com\/(\d+)/);
+                if (vimeoMatch) {
+                    html += `<iframe src="https://player.vimeo.com/video/${vimeoMatch[1]}?title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+                } else {
+                    html += `<p style="color:var(--muted); padding:20px;">Cannot embed this video.</p>`;
+                }
+            } else if (annotatedVideo) {
+                html += `<video controls src="${annotatedVideo}"></video>`;
+            } else {
+                html += `<p style="color:var(--muted); padding:20px;">No video available for this submission.</p>`;
+            }
+            html += `</div>`;
+
+            // Download buttons
+            html += `<div class="report-actions">`;
+            if (current.pdf_report_filename) {
+                html += `<a href="${API}/api/download-report/${current.pdf_report_filename}" target="_blank" class="btn btn-p"><i class="fas fa-file-pdf"></i> Download Report PDF</a>`;
+            }
+            if (current.excel_filename) {
+                html += `<a href="${API}/api/download-excel/${current.excel_filename}" target="_blank" class="btn btn-g"><i class="fas fa-file-excel"></i> Download Self-Evaluation Excel</a>`;
+            }
+            if (annotatedVideo) {
+                html += `<a href="${annotatedVideo}" download class="btn btn-outline"><i class="fas fa-download"></i> Download Annotated Video</a>`;
+            }
+            html += `</div>`;
+            html += `</div>`;
+            container.innerHTML = html;
+
+            document.getElementById('submissionSelect')?.addEventListener('change', (e) => {
+                currentSubmissionIndex = parseInt(e.target.value);
+                renderVideoTab();
+            });
+        }
+
+        // ===== NEW: Report tab with three buttons =====
+        function renderReportTab() {
+            const container = document.getElementById('reportContent');
+            if (!submissions.length) {
+                container.innerHTML = '<div class="empty">No reports available.</div>';
+                return;
+            }
+            const current = submissions[currentSubmissionIndex];
+            let html = `<div class="card">`;
+
+            // Three‑button row
+            html += `<div class="report-actions">`;
+            if (current.pdf_report_filename) {
+                html += `<a href="${API}/api/download-report/${current.pdf_report_filename}" target="_blank" class="btn btn-p"><i class="fas fa-file-pdf"></i> PDF Report</a>`;
+            }
+            if (current.excel_filename) {
+                html += `<a href="${API}/api/download-excel/${current.excel_filename}" target="_blank" class="btn btn-g"><i class="fas fa-file-excel"></i> Self-Evaluation Excel</a>`;
+            }
+            if (current.excel_filename) {
+                // Button to generate PPT from the Excel
+                html += `<button class="btn btn-outline" onclick="generatePPT('${current.excel_filename}')"><i class="fas fa-file-powerpoint"></i> Generate PPT</button>`;
+            }
+            html += `</div>`;
+
+            // Optional PDF preview
+            if (current.pdf_report_filename) {
+                html += `<iframe src="${API}/api/download-report/${current.pdf_report_filename}" style="width:100%; height:70vh; border:none; border-radius:8px; margin-top:20px;"></iframe>`;
+            } else {
+                html += `<p class="empty" style="margin-top:20px;">No PDF report for this submission.</p>`;
+            }
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        // ===== Function to generate and download PPT =====
+        window.generatePPT = async function (excelFilename) {
+            try {
+                toast('⏳ Generating PPT...');
+                const response = await fetch(`${API}/api/generate-ppt-public`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ excel_filename: excelFilename }),
+                    credentials: 'include'
+                });
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.detail || 'PPT generation failed');
+                }
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = excelFilename.replace('.xlsx', '.pptx');
+                a.click();
+                window.URL.revokeObjectURL(url);
+                toast('✅ PPT generated successfully!');
+            } catch (error) {
+                toast('❌ Error: ' + error.message);
+            }
+        };
+
+        function renderSelfEvalTab() {
+            const container = document.getElementById('selfEvalContent');
+            if (!submissions.length) {
+                container.innerHTML = '<div class="empty">No self-evaluation data.</div>';
+                return;
+            }
+            const current = submissions[currentSubmissionIndex];
+            let html = `<div class="card">`;
+            if (current.excel_filename) {
+                html += `
+                    <p style="margin-bottom:16px;">Download the Excel file to view full self-evaluation details.</p>
+                    <a href="${API}/api/download-excel/${current.excel_filename}" target="_blank" class="btn btn-g"><i class="fas fa-file-excel"></i> Download Excel</a>
+                `;
+            } else {
+                html += `<p class="empty">No self-evaluation Excel available.</p>`;
+            }
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        function switchTab(tab) {
+            document.getElementById('videoContent').style.display = 'none';
+            document.getElementById('reportContent').style.display = 'none';
+            document.getElementById('selfEvalContent').style.display = 'none';
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+
+            if (tab === 'video') {
+                document.getElementById('videoContent').style.display = 'block';
+                document.getElementById('tabVideo').classList.add('active');
+                renderVideoTab();
+            } else if (tab === 'report') {
+                document.getElementById('reportContent').style.display = 'block';
+                document.getElementById('tabReport').classList.add('active');
+                renderReportTab();
+            } else if (tab === 'selfEval') {
+                document.getElementById('selfEvalContent').style.display = 'block';
+                document.getElementById('tabSelfEval').classList.add('active');
+                renderSelfEvalTab();
+            }
+        }
+
+        window.switchTab = switchTab;
+
+        function showError(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = '❌ ' + msg;
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 4000);
+        }
+
+        function toast(msg, ms = 3000) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', ms);
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,303 @@
+<!--  Behavioural_Session_AI_analyzer/frontend/test_api.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test Page</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #0b0f1a;
+            color: #fff;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .test {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        .test h3 {
+            margin: 0 0 10px 0;
+            color: #60a5fa;
+        }
+
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px 5px 5px 0;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        pre {
+            background: #0f172a;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .success {
+            color: #10b981;
+        }
+
+        .error {
+            color: #ef4444;
+        }
+
+        .info {
+            color: #60a5fa;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🧪 BVA Platform API Tester</h1>
+    <p>Use this page to test if your backend APIs are working correctly.</p>
+
+    <!-- Test 1: Health Check -->
+    <div class="test">
+        <h3>Test 1: Backend Health Check</h3>
+        <button onclick="testHealth()">Run Test</button>
+        <pre id="health-result">Click "Run Test" to check if backend is running...</pre>
+    </div>
+
+    <!-- Test 2: Login -->
+    <div class="test">
+        <h3>Test 2: Login (TCH001)</h3>
+        <button onclick="testLogin()">Login</button>
+        <pre id="login-result">Click "Login" to test authentication...</pre>
+    </div>
+
+    <!-- Test 3: Session Check -->
+    <div class="test">
+        <h3>Test 3: Check Session (/api/auth/me)</h3>
+        <button onclick="testSession()">Check Session</button>
+        <pre id="session-result">Login first, then click "Check Session"...</pre>
+    </div>
+
+    <!-- Test 4: Get Groups -->
+    <div class="test">
+        <h3>Test 4: Get Groups</h3>
+        <button onclick="testGroups()">Get Groups</button>
+        <pre id="groups-result">Login first, then click "Get Groups"...</pre>
+    </div>
+
+    <!-- Test 5: Create Group -->
+    <div class="test">
+        <h3>Test 5: Create Group</h3>
+        <input type="text" id="groupName" placeholder="Group name" value="Test Group">
+        <button onclick="testCreateGroup()">Create Group</button>
+        <pre id="create-result">Login first, then create a group...</pre>
+    </div>
+
+    <!-- Test 6: Get Topics -->
+    <div class="test">
+        <h3>Test 6: Get Topics</h3>
+        <button onclick="testTopics()">Get Topics</button>
+        <pre id="topics-result">Login first, then click "Get Topics"...</pre>
+    </div>
+
+    <!-- Test 7: Get Students -->
+    <div class="test">
+        <h3>Test 7: Get Students</h3>
+        <button onclick="testStudents()">Get Students</button>
+        <pre id="students-result">Login first, then click "Get Students"...</pre>
+    </div>
+
+    <script>
+        const API = 'http://localhost:8000';
+
+        function log(elementId, message, type = 'info') {
+            const el = document.getElementById(elementId);
+            const color = type === 'success' ? 'success' : type === 'error' ? 'error' : 'info';
+            el.innerHTML = `<span class="${color}">${message}</span>`;
+        }
+
+        // Test 1: Health
+        async function testHealth() {
+            log('health-result', '⏳ Testing...');
+            try {
+                const res = await fetch(`${API}/api/health`);
+                const data = await res.json();
+                log('health-result', `✅ SUCCESS\n${JSON.stringify(data, null, 2)}`, 'success');
+            } catch (error) {
+                log('health-result', `❌ FAILED\n${error.message}`, 'error');
+            }
+        }
+
+        // Test 2: Login
+        async function testLogin() {
+            log('login-result', '⏳ Logging in as TCH001...');
+            try {
+                const res = await fetch(`${API}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        user_id: 'TCH001',
+                        password: 'teacher@123'
+                    })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    log('login-result', `✅ LOGIN SUCCESS\n${JSON.stringify(data, null, 2)}`, 'success');
+                } else {
+                    log('login-result', `❌ LOGIN FAILED\n${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                log('login-result', `❌ NETWORK ERROR\n${error.message}`, 'error');
+            }
+        }
+
+        // Test 3: Session
+        async function testSession() {
+            log('session-result', '⏳ Checking session...');
+            try {
+                const res = await fetch(`${API}/api/auth/me`, {
+                    credentials: 'include'
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    log('session-result', `✅ SESSION VALID\n${JSON.stringify(data, null, 2)}`, 'success');
+                } else {
+                    log('session-result', `❌ NOT AUTHENTICATED\n${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                log('session-result', `❌ ERROR\n${error.message}`, 'error');
+            }
+        }
+
+        // Test 4: Get Groups
+        async function testGroups() {
+            log('groups-result', '⏳ Fetching groups...');
+            try {
+                const res = await fetch(`${API}/api/teacher/groups`, {
+                    credentials: 'include'
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    if (data.length === 0) {
+                        log('groups-result', `✅ SUCCESS (No groups)\n[]`, 'success');
+                    } else {
+                        log('groups-result', `✅ SUCCESS (${data.length} groups)\n${JSON.stringify(data, null, 2)}`, 'success');
+                    }
+                } else {
+                    log('groups-result', `❌ FAILED\n${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                log('groups-result', `❌ ERROR\n${error.message}`, 'error');
+            }
+        }
+
+        // Test 5: Create Group
+        async function testCreateGroup() {
+            const name = document.getElementById('groupName').value;
+            if (!name) {
+                log('create-result', '❌ Please enter a group name', 'error');
+                return;
+            }
+
+            log('create-result', `⏳ Creating group "${name}"...`);
+            try {
+                const res = await fetch(`${API}/api/teacher/groups`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        name: name,
+                        description: 'Test group created from API tester'
+                    })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    log('create-result', `✅ GROUP CREATED\n${JSON.stringify(data, null, 2)}`, 'success');
+                } else {
+                    log('create-result', `❌ FAILED\n${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                log('create-result', `❌ ERROR\n${error.message}`, 'error');
+            }
+        }
+
+        // Test 6: Get Topics
+        async function testTopics() {
+            log('topics-result', '⏳ Fetching topics...');
+            try {
+                const res = await fetch(`${API}/api/teacher/topics`, {
+                    credentials: 'include'
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    if (data.length === 0) {
+                        log('topics-result', `✅ SUCCESS (No topics assigned)\n[]`, 'success');
+                    } else {
+                        log('topics-result', `✅ SUCCESS (${data.length} topics)\n${JSON.stringify(data, null, 2)}`, 'success');
+                    }
+                } else {
+                    log('topics-result', `❌ FAILED\n${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                log('topics-result', `❌ ERROR\n${error.message}`, 'error');
+            }
+        }
+
+        // Test 7: Get Students
+        async function testStudents() {
+            log('students-result', '⏳ Fetching students...');
+            try {
+                const res = await fetch(`${API}/api/teacher/students`, {
+                    credentials: 'include'
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    if (data.length === 0) {
+                        log('students-result', `✅ SUCCESS (No students)\n[]`, 'success');
+                    } else {
+                        log('students-result', `✅ SUCCESS (${data.length} students)\n${JSON.stringify(data, null, 2)}`, 'success');
+                    }
+                } else {
+                    log('students-result', `❌ FAILED\n${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                log('students-result', `❌ ERROR\n${error.message}`, 'error');
+            }
+        }
+
+        // Auto-run health check on page load
+        window.onload = () => {
+            console.log('🧪 API Tester loaded');
+            console.log('Backend URL:', API);
+            testHealth();
+        };
+    </script>
+</body>
+
+</html>

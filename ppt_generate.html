@@ -1,0 +1,2740 @@
+<!-- Behavioural_Session_AI_analyzer/frontend/teacher/ppt_generate.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ekLakshya - PPT Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #4A6CF7;
+            --secondary-blue: #3A5BD6;
+            --light-blue: #F5F7FF;
+            --dark-blue: #2A3B8F;
+            --accent-green: #00B894;
+            --accent-red: #FF6B6B;
+            --accent-yellow: #FFD93D;
+            --accent-orange: #FF9F43;
+            --text-dark: #2C3E50;
+            --text-light: #7F8C8D;
+            --border-color: #E8EFF7;
+            --white: #FFFFFF;
+            --gray-light: #F8F9FA;
+            --shadow: 0 4px 20px rgba(74, 108, 247, 0.08);
+            --shadow-hover: 0 8px 30px rgba(74, 108, 247, 0.15);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7ff 0%, #ffffff 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 20px 40px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-left: 5px solid var(--primary-blue);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .header-text h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark-blue);
+            margin-bottom: 5px;
+        }
+
+        .header-text p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn-signout {
+            background: transparent;
+            border: 1px solid #ddd;
+            color: var(--text-light);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .btn-signout:hover {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .content-area {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--dark-blue);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary-blue);
+        }
+
+        .generation-options {
+            margin-bottom: 40px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .option-card {
+            background: var(--gray-light);
+            border-radius: var(--radius);
+            padding: 25px;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .option-card:hover {
+            border-color: var(--primary-blue);
+            background: var(--light-blue);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .option-card.selected {
+            border-color: var(--primary-blue);
+            background: var(--light-blue);
+            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+        }
+
+        .option-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .icon-batch {
+            background: var(--primary-blue);
+        }
+
+        .icon-individual {
+            background: var(--accent-green);
+        }
+
+        .icon-email {
+            background: var(--accent-orange);
+        }
+
+        .option-card h3 {
+            font-size: 16px;
+            color: var(--dark-blue);
+            margin-bottom: 8px;
+        }
+
+        .option-card p {
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .option-badge {
+            position: absolute;
+            top: 155px;
+            right: 15px;
+            background: var(--accent-green);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .upload-section {
+            margin-bottom: 40px;
+        }
+
+        .upload-area {
+            border: 3px dashed var(--border-color);
+            border-radius: var(--radius);
+            padding: 60px 30px;
+            text-align: center;
+            background: var(--light-blue);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-blue);
+            background: #F0F5FF;
+        }
+
+        .upload-area.dragover {
+            border-color: var(--accent-green);
+            background: #F0FFF9;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+        }
+
+        .upload-text h3 {
+            font-size: 18px;
+            color: var(--dark-blue);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .upload-text p {
+            color: var(--text-light);
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .upload-button {
+            background: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .upload-button:hover {
+            background: var(--secondary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 108, 247, 0.2);
+        }
+
+        .file-info {
+            background: var(--light-blue);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .file-details {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .file-detail {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .file-detail-label {
+            font-size: 12px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .file-detail-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark-blue);
+        }
+
+        .student-count {
+            background: var(--accent-green);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ppt-controls {
+            margin-top: 40px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-blue);
+            font-size: 14px;
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .input-group input:focus,
+        .input-group select:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .action-button {
+            padding: 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .generate-btn {
+            background: var(--accent-green);
+            color: var(--white);
+        }
+
+        .generate-btn:hover {
+            background: #00A884;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 184, 148, 0.2);
+        }
+
+        .generate-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .preview-btn {
+            background: var(--accent-yellow);
+            color: var(--text-dark);
+        }
+
+        .preview-btn:hover {
+            background: #FFC800;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 217, 61, 0.2);
+        }
+
+        .preview-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .email-btn {
+            background: var(--accent-orange);
+            color: var(--white);
+        }
+
+        .email-btn:hover {
+            background: #FF8C00;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 159, 67, 0.2);
+        }
+
+        .email-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .sidebar {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+            position: sticky;
+            top: 30px;
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-blue);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-title i {
+            color: var(--primary-blue);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: var(--light-blue);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-red);
+        }
+
+        .status-dot.active {
+            background: var(--accent-green);
+        }
+
+        .status-text {
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .selected-options {
+            margin-top: 30px;
+        }
+
+        .selected-options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .selected-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: var(--gray-light);
+            border-radius: 6px;
+            font-size: 13px;
+            border-left: 3px solid var(--primary-blue);
+        }
+
+        .selected-option .option-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .option-batch {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .option-individual {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .option-email {
+            background: var(--accent-orange);
+            color: white;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+        }
+
+        .loading-spinner {
+            border: 4px solid var(--light-blue);
+            border-top: 4px solid var(--primary-blue);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg)
+            }
+
+            100% {
+                transform: rotate(360deg)
+            }
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            color: var(--dark-blue);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--white);
+            padding: 20px 25px;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1002;
+            animation: toastSlideIn 0.3s ease-out;
+            border-left: 4px solid var(--accent-green);
+            max-width: 400px;
+        }
+
+        .toast.error {
+            border-left-color: var(--accent-red);
+        }
+
+        .toast.info {
+            border-left-color: var(--primary-blue);
+        }
+
+        .toast i {
+            font-size: 24px;
+        }
+
+        .toast.success i {
+            color: var(--accent-green);
+        }
+
+        .toast.error i {
+            color: var(--accent-red);
+        }
+
+        .toast.info i {
+            color: var(--primary-blue);
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 1400px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 20px 30px;
+            border-bottom: 2px solid var(--light-blue);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+            color: var(--dark-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: var(--light-blue);
+            color: var(--dark-blue);
+        }
+
+        .modal-body {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 2px solid var(--light-blue);
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .modal-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cancel-btn {
+            background: var(--gray-light);
+            color: var(--text-dark);
+        }
+
+        .cancel-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .confirm-btn {
+            background: var(--accent-green);
+            color: var(--white);
+        }
+
+        .confirm-btn:hover {
+            background: #00A884;
+        }
+
+        .close-btn {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .close-btn:hover {
+            background: var(--secondary-blue);
+        }
+
+        .student-controls {
+            background: var(--white);
+            padding: 20px;
+            border-radius: var(--radius);
+            border: 2px solid var(--border-color);
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .control-btn {
+            padding: 10px 16px;
+            border: 2px solid var(--border-color);
+            background: var(--white);
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-dark);
+        }
+
+        .control-btn:hover {
+            border-color: var(--primary-blue);
+            background: var(--light-blue);
+            transform: translateY(-2px);
+        }
+
+        .select-all-btn:hover {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .deselect-all-btn:hover {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        .invert-selection-btn:hover {
+            border-color: var(--accent-orange);
+            color: var(--accent-orange);
+        }
+
+        .show-selected-btn.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        .search-container {
+            position: relative;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            z-index: 1;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 12px 12px 12px 45px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+        }
+
+        .student-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--light-blue) 0%, #E8F0FE 100%);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            width: 100%;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background: var(--white);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark-blue);
+        }
+
+        .student-list-container {
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .student-list-header {
+            display: grid;
+            grid-template-columns: 50px 2fr 2fr 150px 100px 100px;
+            background: var(--light-blue);
+            padding: 15px;
+            font-weight: 600;
+            color: var(--dark-blue);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .student-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .student-item {
+            display: grid;
+            grid-template-columns: 50px 2fr 2fr 150px 100px 100px;
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .student-item:hover {
+            background: var(--light-blue);
+        }
+
+        .student-item.selected {
+            background: #F0FFF9;
+            border-left: 3px solid var(--accent-green);
+        }
+
+        .student-checkbox input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--primary-blue);
+        }
+
+        .student-name {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .student-email {
+            color: var(--text-light);
+            font-size: 13px;
+            font-family: monospace;
+        }
+
+        .student-template-display {
+            padding: 4px 8px;
+            background: var(--light-blue);
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .student-status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .status-has-email {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .status-no-email {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+
+        .student-action-btn {
+            background: none;
+            border: none;
+            color: var(--primary-blue);
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .student-action-btn:hover {
+            background: var(--light-blue);
+        }
+
+        .selected-students-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--light-blue);
+            border-radius: var(--radius);
+            border-left: 4px solid var(--primary-blue);
+            width: 100%;
+        }
+
+        .selected-students-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .bulk-action-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bulk-action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .bulk-edit-btn {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .bulk-edit-btn:hover:not(:disabled) {
+            background: var(--secondary-blue);
+            transform: translateY(-2px);
+        }
+
+        .selected-student-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: var(--white);
+            border: 2px solid var(--primary-blue);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--dark-blue);
+            margin: 2px;
+        }
+
+        .selected-student-chip .remove-chip {
+            background: none;
+            border: none;
+            color: var(--accent-red);
+            cursor: pointer;
+            padding: 2px;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .selected-student-chip .remove-chip:hover {
+            background: var(--light-blue);
+        }
+
+        .highlight {
+            background-color: var(--accent-yellow);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .preview-info {
+            background: var(--light-blue);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 1200px;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .preview-info h4 {
+            color: var(--dark-blue);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .preview-download-btn {
+            background: var(--accent-green);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .preview-download-btn:hover {
+            background: #00A884;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 184, 148, 0.2);
+        }
+
+        /* ── SLIDE PREVIEW STYLES ── */
+        .slide-wrapper {
+            margin-bottom: 32px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .slide-label {
+            background: var(--primary-blue);
+            color: white;
+            padding: 9px 18px;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            letter-spacing: 0.3px;
+        }
+
+        .slide-aspect-box {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide-canvas {
+            position: relative;
+            transform-origin: top left;
+            overflow: hidden;
+        }
+
+        .progress-container {
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: var(--border-color);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green), #4CAF50);
+            transition: width 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .email-log {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 15px;
+        }
+
+        .log-entry {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-success {
+            color: var(--accent-green);
+        }
+
+        .log-error {
+            color: var(--accent-red);
+        }
+
+        .log-icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        .quick-email-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .quick-email-btn {
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            background: var(--white);
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .quick-email-btn:hover {
+            border-color: var(--primary-blue);
+            background: var(--light-blue);
+        }
+
+        .email-all-btn {
+            color: var(--accent-green);
+            border-color: var(--accent-green);
+        }
+
+        .email-all-btn:hover {
+            background: #F0FFF9;
+        }
+
+        .email-selected-btn {
+            color: var(--accent-orange);
+            border-color: var(--accent-orange);
+        }
+
+        .email-selected-btn:hover {
+            background: #FFF5E6;
+        }
+
+        .email-options {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid var(--light-blue);
+        }
+
+        .character-count {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        .character-count.warning {
+            color: var(--accent-orange);
+        }
+
+        .character-count.error {
+            color: var(--accent-red);
+        }
+
+        .template-tab {
+            padding: 10px 20px;
+            background: var(--light-blue);
+            border: 2px solid var(--border-color);
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .template-tab.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        .template-tab:hover:not(.active) {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        .footer {
+            text-align: center;
+            padding-top: 40px;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            color: var(--dark-blue);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header {
+                padding: 20px;
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .logo-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-controls {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .upload-area {
+                padding: 40px 20px;
+            }
+
+            .file-details {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .student-list-header,
+            .student-item {
+                grid-template-columns: 40px 1fr 120px 80px 80px 60px;
+                font-size: 12px;
+            }
+
+            .quick-email-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-container">
+                <img src="/static/ekl_logo.png" alt="ekLakshya Logo" class="logo" onerror="this.style.display='none'">
+                <div class="header-text">
+                    <h1>ekLakshya PPT Generator</h1>
+                    <p>Generate Communication Skills Assessment Reports</p>
+                </div>
+            </div>
+            <div class="header-controls">
+                <div class="status-indicator">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span class="status-text" id="statusText">Ready to upload</span>
+                </div>
+                <button class="btn-signout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <div class="content-area">
+                <!-- Generation Options -->
+                <div class="generation-options">
+                    <h2 class="section-title"><i class="fas fa-check-square"></i> Select Generation Option</h2>
+                    <div class="options-grid" id="generationOptions">
+                        <div class="option-card" onclick="selectGenerationOption('batch')" id="option-batch">
+                            <div class="option-icon icon-batch"><i class="fas fa-users"></i></div>
+                            <h3>1. Whole Batch PPT</h3>
+                            <p>Generate a single PPT file containing all students' assessment reports in one
+                                presentation.</p>
+                            <div class="option-badge">Download Only</div>
+                        </div>
+                        <div class="option-card" onclick="selectGenerationOption('individual')" id="option-individual">
+                            <div class="option-icon icon-individual"><i class="fas fa-user"></i></div>
+                            <h3>2. Individual Student PPTs</h3>
+                            <p>Generate separate PPT files for each student, downloaded as a ZIP file.</p>
+                            <div class="option-badge">Download ZIP</div>
+                        </div>
+                        <div class="option-card" onclick="selectGenerationOption('individual+email')"
+                            id="option-individual-email">
+                            <div class="option-icon icon-email"><i class="fas fa-envelope"></i></div>
+                            <h3>3. Individual PPTs + Email</h3>
+                            <p>Generate individual PPTs and automatically send emails to ALL students with their
+                                reports.</p>
+                            <div class="option-badge">Auto Email</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Section -->
+                <div class="upload-section">
+                    <h2 class="section-title"><i class="fas fa-file-upload"></i> Upload Excel Sheet</h2>
+                    <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                        <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                        <div class="upload-text">
+                            <h3>Click to upload or drag &amp; drop</h3>
+                            <p>Supports .xlsx and .xls files only</p>
+                        </div>
+                        <button class="upload-button"><i class="fas fa-folder-open"></i> Browse Files</button>
+                    </div>
+                    <input type="file" id="fileInput" accept=".xlsx,.xls,.ods" style="display:none;"
+                        onchange="handleFileSelect(event)">
+                    <div class="file-info" id="fileInfo" style="display:none;">
+                        <div class="file-details">
+                            <div class="file-detail"><span class="file-detail-label">File Name</span><span
+                                    class="file-detail-value" id="fileName">-</span></div>
+                            <div class="file-detail"><span class="file-detail-label">File Size</span><span
+                                    class="file-detail-value" id="fileSize">-</span></div>
+                            <div class="file-detail"><span class="file-detail-label">Status</span><span
+                                    class="student-count" id="fileStatus"><i class="fas fa-check"></i> Ready</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PPT Controls -->
+                <div class="ppt-controls">
+                    <h2 class="section-title"><i class="fas fa-cogs"></i> Generate and preview ppt</h2>
+                    <div class="input-group">
+                        <label for="pptName"><i class="fas fa-file-powerpoint"></i> PPT Name</label>
+                        <input type="text" id="pptName"
+                            placeholder="Enter PPT file name (e.g., Communication_Assessment)" oninput="updateStatus()">
+                    </div>
+                    <div class="action-buttons">
+                        <button class="action-button generate-btn" id="generateBtn" onclick="generatePPT()" disabled>
+                            <i class="fas fa-cogs"></i> Generate PPT
+                        </button>
+                        <button class="action-button preview-btn" id="previewBtn" onclick="openPreviewModal()" disabled>
+                            <i class="fas fa-eye"></i> Preview PPT
+                        </button>
+                        <button class="action-button email-btn" id="emailOptionsBtn" onclick="showEmailOptions()"
+                            disabled>
+                            <i class="fas fa-envelope"></i> Email Options
+                        </button>
+                    </div>
+
+                    <!-- Email Options -->
+                    <div class="email-options" id="emailOptions" style="display:none;">
+                        <h2 class="section-title"><i class="fas fa-envelope"></i> Email Configuration</h2>
+                        <div class="input-group">
+                            <label for="emailSubject"><i class="fas fa-pen"></i> Email Subject</label>
+                            <input type="text" id="emailSubject" placeholder="Enter email subject"
+                                value="Your Communication Skills Assessment Report">
+                        </div>
+                        <div class="input-group">
+                            <label for="globalEmailTemplate"><i class="fas fa-palette"></i> Default Email
+                                Template</label>
+                            <select id="globalEmailTemplate">
+                                <option value="default">Default - Professional &amp; Detailed</option>
+                                <option value="formal">Formal - Simple &amp; Academic</option>
+                                <option value="friendly">Friendly - Casual &amp; Encouraging</option>
+                                <option value="custom">Custom - Edit individually</option>
+                            </select>
+                        </div>
+                        <div class="quick-email-options" style="margin-top:30px;">
+                            <button class="quick-email-btn email-all-btn" onclick="sendEmailsToAll()">
+                                <i class="fas fa-paper-plane"></i> Send to ALL Students
+                            </button>
+                            <button class="quick-email-btn email-selected-btn" onclick="openStudentSelectionModal()">
+                                <i class="fas fa-users"></i> Send to Selected Students (Custom Templates)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <h3 class="sidebar-title"><i class="fas fa-info-circle"></i> Status Overview</h3>
+                <div class="status-indicator">
+                    <div class="status-dot" id="overallStatusDot"></div>
+                    <span class="status-text" id="overallStatusText">Select options and upload file</span>
+                </div>
+                <div class="selected-options">
+                    <h4 style="font-size:14px;color:var(--text-dark);margin-bottom:15px;"><i class="fas fa-tasks"></i>
+                        Selected Options</h4>
+                    <div class="selected-options-list" id="selectedOptionsList">
+                        <div style="color:var(--text-light);font-style:italic;padding:10px;font-size:13px;">No options
+                            selected</div>
+                    </div>
+                </div>
+                <div style="margin-top:30px;padding-top:20px;border-top:1px solid var(--border-color);">
+                    <h4 style="font-size:14px;color:var(--text-dark);margin-bottom:15px;"><i
+                            class="fas fa-lightbulb"></i> Quick Tips</h4>
+                    <ul style="padding-left:20px;font-size:13px;color:var(--text-light);line-height:1.8;">
+                        <li>Upload Excel file with student data</li>
+                        <li>Enter a name for your PPT file</li>
+                        <li>Generate and preview the PPT</li>
+                        <li>Download or email to students</li>
+                        <li>Each student can have a different email template</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Modal -->
+        <div class="modal-overlay" id="previewModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-eye"></i> PPT Preview – Communication Skills Assessment Report</h3>
+                    <button class="modal-close" onclick="closePreviewModal()">×</button>
+                </div>
+                <div class="modal-body" id="previewModalBody">
+                    <div id="previewPlaceholder" style="text-align:center;padding:60px 40px;">
+                        <div class="loading-spinner" style="margin:0 auto 20px;"></div>
+                        <p style="color:var(--dark-blue);font-weight:600;">Loading preview...</p>
+                    </div>
+                    <div id="previewContainer" style="display:none;width:100%;">
+                        <div
+                            style="padding:20px 20px 10px;border-bottom:2px solid var(--light-blue);margin-bottom:20px;width:100%;">
+                            <h3 id="previewTitle" style="color:var(--dark-blue);margin-bottom:5px;">Communication Skills
+                                Assessment Report</h3>
+                            <p id="previewSubtitle" style="color:var(--text-light);font-size:14px;">Loading
+                                presentation...</p>
+                        </div>
+                        <div id="previewContent" style="width:100%;"></div>
+                        <div class="preview-info" id="previewInfo"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn preview-download-btn" onclick="downloadGeneratedPPT()"
+                        id="previewDownloadBtn" style="display:none;">
+                        <i class="fas fa-download"></i> Download PPT
+                    </button>
+                    <button class="modal-btn close-btn" onclick="closePreviewModal()">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Selection Modal -->
+        <div class="modal-overlay" id="studentModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-users"></i> Select Students &amp; Customize Email Templates</h3>
+                    <button class="modal-close" onclick="closeStudentModal()"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="student-controls">
+                        <div style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;width:100%;">
+                            <div class="search-container">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="studentSearch" placeholder="Search students by name or email..."
+                                    oninput="filterStudentList()">
+                            </div>
+                            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                                <button class="control-btn select-all-btn" onclick="selectAllVisibleStudents()"><i
+                                        class="fas fa-check-double"></i> Select All</button>
+                                <button class="control-btn deselect-all-btn" onclick="deselectAllStudents()"><i
+                                        class="fas fa-times-circle"></i> Deselect All</button>
+                                <button class="control-btn invert-selection-btn" onclick="invertSelection()"><i
+                                        class="fas fa-exchange-alt"></i> Invert</button>
+                                <button class="control-btn show-selected-btn" onclick="toggleShowOnlySelected()"><i
+                                        class="fas fa-eye"></i> Show Selected</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="student-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Total Students</div>
+                            <div class="stat-value" id="totalStudentsCount">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">With Email</div>
+                            <div class="stat-value" id="studentsWithEmailCount">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Selected</div>
+                            <div class="stat-value" id="selectedStudentsCount">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Filtered</div>
+                            <div class="stat-value" id="filteredStudentsCount">0</div>
+                        </div>
+                    </div>
+                    <div class="student-list-container">
+                        <div class="student-list-header">
+                            <div class="student-checkbox"><input type="checkbox" id="selectAllCheckbox"
+                                    onclick="toggleAllStudents(this.checked)"></div>
+                            <div>Student Name</div>
+                            <div>Email Address</div>
+                            <div>Template</div>
+                            <div>Status</div>
+                            <div>Actions</div>
+                        </div>
+                        <div class="student-list" id="studentList"></div>
+                    </div>
+                    <div class="selected-students-section">
+                        <div class="selected-students-header">
+                            <div style="flex:1;">
+                                <h4 style="color:var(--dark-blue);margin-bottom:5px;font-size:16px;"><i
+                                        class="fas fa-users"></i> Selected Students</h4>
+                                <div id="selectedCount" style="color:var(--text-dark);font-size:14px;">No students
+                                    selected</div>
+                            </div>
+                            <div style="display:flex;gap:10px;">
+                                <button class="bulk-action-btn bulk-edit-btn" onclick="bulkEditEmailTemplates()"
+                                    id="bulkEditBtn" disabled>
+                                    <i class="fas fa-edit"></i> Edit Templates
+                                </button>
+                            </div>
+                        </div>
+                        <div id="selectedStudentsPreview"
+                            style="margin-top:15px;max-height:100px;overflow-y:auto;display:none;">
+                            <div style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn cancel-btn" onclick="closeStudentModal()">Cancel</button>
+                    <button class="modal-btn confirm-btn" onclick="confirmStudentSelection()" id="sendSelectedBtn"
+                        disabled>
+                        <i class="fas fa-paper-plane"></i> Send to Selected Students
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Editor Modal -->
+        <div class="modal-overlay" id="emailEditorModal">
+            <div class="modal-content" style="max-width:1100px;">
+                <div class="modal-header">
+                    <h3><i class="fas fa-edit" style="color:var(--primary-blue);"></i> Edit Email Template for <span
+                            id="currentStudentName" style="color:var(--primary-blue);">Student Name</span></h3>
+                    <button class="modal-close" onclick="closeEmailEditorModal()"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body" style="padding:30px;max-height:80vh;overflow-y:auto;display:block;">
+                    <div
+                        style="background:linear-gradient(135deg,var(--light-blue) 0%,#F0F5FF 100%);border-radius:var(--radius);padding:20px;border-left:4px solid var(--primary-blue);margin-bottom:20px;">
+                        <h4 style="font-size:15px;font-weight:600;color:var(--dark-blue);margin-bottom:15px;"><i
+                                class="fas fa-user-graduate"></i> Student Information</h4>
+                        <div style="display:flex;flex-direction:column;gap:10px;">
+                            <div style="display:flex;justify-content:space-between;"><span
+                                    style="color:var(--text-light);font-size:13px;">Name:</span><span
+                                    style="color:var(--dark-blue);font-weight:500;font-size:13px;"
+                                    id="editorStudentName">-</span></div>
+                            <div style="display:flex;justify-content:space-between;"><span
+                                    style="color:var(--text-light);font-size:13px;">Email:</span><span
+                                    style="color:var(--dark-blue);font-weight:500;font-size:13px;"
+                                    id="editorStudentEmail">-</span></div>
+                            <div style="display:flex;justify-content:space-between;"><span
+                                    style="color:var(--text-light);font-size:13px;">PPT Status:</span><span
+                                    style="color:var(--accent-green);font-weight:600;font-size:13px;"
+                                    id="editorPPTStatus">Ready</span></div>
+                        </div>
+                    </div>
+                    <div
+                        style="background:var(--white);border:2px solid var(--border-color);border-radius:var(--radius);padding:25px;margin-bottom:20px;">
+                        <h4 style="font-size:16px;font-weight:600;color:var(--dark-blue);margin-bottom:15px;"><i
+                                class="fas fa-bolt" style="color:var(--accent-orange);"></i> Quick Templates</h4>
+                        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:15px;">
+                            <button class="template-tab" onclick="loadTemplate('default')">Default</button>
+                            <button class="template-tab" onclick="loadTemplate('professional')">Professional</button>
+                            <button class="template-tab" onclick="loadTemplate('formal')">Formal</button>
+                            <button class="template-tab" onclick="loadTemplate('friendly')">Friendly</button>
+                        </div>
+                    </div>
+                    <div
+                        style="background:var(--white);border:2px solid var(--border-color);border-radius:var(--radius);padding:25px;margin-bottom:20px;">
+                        <h4 style="font-size:16px;font-weight:600;color:var(--dark-blue);margin-bottom:15px;"><i
+                                class="fas fa-cubes" style="color:var(--primary-blue);"></i> Available Variables</h4>
+                        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:15px;">
+                            <button onclick="insertVariable('{student_name}')"
+                                style="background:var(--light-blue);border:1px solid var(--primary-blue);color:var(--primary-blue);padding:8px 16px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;"><i
+                                    class="fas fa-user"></i> Student Name</button>
+                            <button onclick="insertVariable('{assessment_date}')"
+                                style="background:var(--light-blue);border:1px solid var(--primary-blue);color:var(--primary-blue);padding:8px 16px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;"><i
+                                    class="fas fa-calendar"></i> Assessment Date</button>
+                            <button onclick="insertVariable('{college_name}')"
+                                style="background:var(--light-blue);border:1px solid var(--primary-blue);color:var(--primary-blue);padding:8px 16px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;"><i
+                                    class="fas fa-university"></i> College Name</button>
+                            <button onclick="insertVariable('{course_name}')"
+                                style="background:var(--light-blue);border:1px solid var(--primary-blue);color:var(--primary-blue);padding:8px 16px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;"><i
+                                    class="fas fa-book"></i> Course Name</button>
+                        </div>
+                    </div>
+                    <div
+                        style="background:var(--white);border:2px solid var(--border-color);border-radius:var(--radius);padding:25px;margin-bottom:20px;">
+                        <label
+                            style="display:block;margin-bottom:12px;font-weight:600;color:var(--dark-blue);font-size:15px;"><i
+                                class="fas fa-heading" style="color:var(--primary-blue);margin-right:8px;"></i> Email
+                            Subject</label>
+                        <input type="text" id="customEmailSubject" placeholder="Enter email subject"
+                            value="Your Communication Skills Assessment Report"
+                            oninput="updateCharacterCount('subjectCount',this.value.length,100);updateEmailPreview();"
+                            style="width:100%;padding:14px;border:2px solid var(--border-color);border-radius:8px;font-size:15px;font-family:inherit;background:var(--white);margin-bottom:10px;">
+                        <div class="character-count" id="subjectCount">43/100 characters</div>
+                    </div>
+                    <div
+                        style="background:var(--white);border:2px solid var(--border-color);border-radius:var(--radius);padding:25px;margin-bottom:20px;">
+                        <label
+                            style="display:block;margin-bottom:12px;font-weight:600;color:var(--dark-blue);font-size:15px;"><i
+                                class="fas fa-align-left" style="color:var(--primary-blue);margin-right:8px;"></i> Email
+                            Body</label>
+                        <div
+                            style="display:flex;gap:8px;margin-bottom:15px;padding:10px;background:var(--gray-light);border-radius:8px;flex-wrap:wrap;">
+                            <button onclick="formatText('bold')"
+                                style="padding:8px 14px;border:1px solid var(--border-color);background:var(--white);border-radius:6px;cursor:pointer;font-size:13px;"><i
+                                    class="fas fa-bold"></i></button>
+                            <button onclick="formatText('italic')"
+                                style="padding:8px 14px;border:1px solid var(--border-color);background:var(--white);border-radius:6px;cursor:pointer;font-size:13px;"><i
+                                    class="fas fa-italic"></i></button>
+                            <button onclick="formatText('underline')"
+                                style="padding:8px 14px;border:1px solid var(--border-color);background:var(--white);border-radius:6px;cursor:pointer;font-size:13px;"><i
+                                    class="fas fa-underline"></i></button>
+                        </div>
+                        <textarea id="customEmailBody" rows="12" placeholder="Write your email content here..."
+                            oninput="updateCharacterCount('bodyCount',this.value.length,2000);updateEmailPreview();"
+                            style="width:100%;padding:16px;border:2px solid var(--border-color);border-radius:8px;font-size:14px;font-family:inherit;background:var(--white);line-height:1.6;resize:vertical;">Dear {student_name},
+
+Please find attached your Communication Skills Assessment Report. This report provides a detailed overview of your current communication strengths and areas for improvement.
+
+Best regards,
+ekLakshya Team</textarea>
+                        <div class="character-count" id="bodyCount">125/2000 characters</div>
+                    </div>
+                    <div
+                        style="background:var(--white);border:2px solid var(--border-color);border-radius:var(--radius);padding:25px;">
+                        <h4 style="font-size:15px;font-weight:600;color:var(--dark-blue);margin-bottom:15px;"><i
+                                class="fas fa-eye" style="color:var(--accent-green);"></i> Live Preview</h4>
+                        <div
+                            style="background:var(--gray-light);border-radius:8px;padding:20px;border-left:4px solid var(--primary-blue);">
+                            <div
+                                style="margin-bottom:15px;padding-bottom:15px;border-bottom:1px solid var(--border-color);">
+                                <div style="display:flex;margin-bottom:8px;"><strong
+                                        style="min-width:60px;">To:</strong><span
+                                        id="previewToEmail">student@example.com</span></div>
+                                <div style="display:flex;"><strong style="min-width:60px;">Subject:</strong><span
+                                        id="previewSubject" style="font-weight:500;">Your Communication Skills
+                                        Assessment Report</span></div>
+                            </div>
+                            <div id="previewEmailContent" style="font-size:14px;line-height:1.6;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn cancel-btn" onclick="closeEmailEditorModal()"><i class="fas fa-times"></i>
+                        Cancel</button>
+                    <div style="display:flex;gap:15px;">
+                        <button class="modal-btn" onclick="saveAsTemplate()"
+                            style="background:var(--white);color:var(--primary-blue);border:2px solid var(--primary-blue);border-radius:8px;padding:12px 24px;font-size:14px;font-weight:600;cursor:pointer;"><i
+                                class="fas fa-save"></i> Save as Template</button>
+                        <button class="modal-btn confirm-btn" onclick="saveCustomEmail()"><i class="fas fa-check"></i>
+                            Save &amp; Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Progress Modal -->
+        <div class="modal-overlay" id="emailProgressModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-envelope"></i> Sending Emails</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="emailProgressBar" style="width:0%"></div>
+                        </div>
+                        <div class="progress-text" id="emailProgressText">Preparing to send emails...</div>
+                    </div>
+                    <div class="email-log" id="emailLog"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn cancel-btn" onclick="cancelEmailSending()"
+                        id="cancelEmailBtn">Cancel</button>
+                    <button class="modal-btn confirm-btn" onclick="closeEmailProgressModal()" id="closeEmailBtn"
+                        style="display:none;">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div style="text-align:center;">
+                <div class="loading-spinner"></div>
+                <div class="loading-text" id="loadingText">Processing your request...</div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="https://www.eklakshya.com" target="_blank"><i class="fas fa-globe"></i> Website</a>
+                <a href="tel:+918050050186"><i class="fas fa-phone"></i> +91 8050050186</a>
+                <a href="mailto:info@eklakshya.com"><i class="fas fa-envelope"></i> info@eklakshya.com</a>
+            </div>
+            <p>© 2025-26 ekLakshya Innovation Labs | All Rights Reserved</p>
+        </footer>
+    </div>
+
+    <script src="../shared/js/auth.js"></script>
+
+    <script>
+        // =========================================================================
+        // CONFIG
+        // =========================================================================
+        window.API = 'http://localhost:8000';
+
+        (async function () {
+            try {
+                const user = await checkAuth('teacher');
+                if (!user) { window.location.href = '/login/index.html'; return; }
+            } catch (err) { window.location.href = '/login/index.html'; }
+        })();
+
+        function logout() {
+            document.cookie.split(";").forEach(c => {
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });
+            window.location.href = '/login/index.html';
+        }
+
+        // =========================================================================
+        // GLOBALS
+        // =========================================================================
+        let uploadedFileName = null, selectedGenerationOption = null;
+        let pptGenerated = false, pptFileName = "", pptData = null;
+        let allStudents = [], selectedStudents = [], studentEmailTemplates = {};
+        let currentEditingStudent = null, emailSendingInProgress = false;
+        let showOnlySelected = false, searchFilter = '', filteredStudents = [];
+
+        const emailTemplates = {
+            default: {
+                subject: "Your Communication Skills Assessment Report - {student_name}",
+                body: `Dear {student_name},\n\nPlease find attached your Communication Skills Assessment Report.\n\nBest regards,\nekLakshya Innovation Labs\n----------------------------------------------------------------------\nHubli - 580031 | Mobile: 8050050186 | https://www.eklakshya.com`
+            },
+            professional: {
+                subject: "Your Communication Skills Assessment Report - {student_name}",
+                body: `Dear {student_name},\n\nAttached is your comprehensive Communication Skills Assessment Report.\n\nKindly review it at your convenience.\n\nBest Regards,\nekLakshya Team`
+            },
+            formal: {
+                subject: "Communication Skills Assessment Results - {student_name}",
+                body: `To: {student_name}\nDate: {assessment_date}\n\nYour Communication Skills Assessment has been completed. Please find attached your detailed report.\n\nSincerely,\nAssessment Committee\n{college_name}`
+            },
+            friendly: {
+                subject: "Hey {student_name}! Your Communication Assessment Results are here!",
+                body: `Hi {student_name}! 🎉\n\nYour Communication Skills Assessment report is ready!\n\nKeep shining,\nYour friendly assessment team at {college_name}\n\nPS: We're super proud of your progress!`
+            }
+        };
+
+        // =========================================================================
+        // FILE UPLOAD
+        // =========================================================================
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (!file.name.match(/\.(xlsx|xls|ods)$/i)) { showToast('Please upload only Excel files (.xlsx, .xls, .ods)', 'error'); return; }
+            showLoading('Uploading file...');
+            const formData = new FormData();
+            formData.append('file', file);
+            fetch(`${window.API}/upload`, { method: 'POST', body: formData, credentials: 'include' })
+                .then(r => r.json())
+                .then(data => {
+                    hideLoading();
+                    if (data.success) {
+                        uploadedFileName = data.filename;
+                        allStudents = data.students || [];
+                        studentEmailTemplates = {};
+                        allStudents.forEach(s => {
+                            studentEmailTemplates[s.name] = { type: 'default', subject: emailTemplates.default.subject, body: emailTemplates.default.body, isCustom: false };
+                        });
+                        document.getElementById('fileName').textContent = file.name;
+                        document.getElementById('fileSize').textContent = formatFileSize(file.size);
+                        document.getElementById('fileInfo').style.display = 'block';
+                        document.getElementById('fileStatus').innerHTML = `<i class="fas fa-check"></i> ${data.student_count} students found`;
+                        if (data.suggested_ppt_name) { document.getElementById('pptName').value = data.suggested_ppt_name; pptFileName = data.suggested_ppt_name; }
+                        showToast(data.message, 'success');
+                        updateStatus();
+                    } else { showToast(data.error || 'Upload failed', 'error'); }
+                })
+                .catch(err => { hideLoading(); showToast('Upload failed: ' + err.message, 'error'); });
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024, sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // =========================================================================
+        // GENERATION OPTION
+        // =========================================================================
+        function selectGenerationOption(option) {
+            selectedGenerationOption = option;
+            document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+            document.getElementById(`option-${option.replace('+', '-')}`).classList.add('selected');
+            updateSelectedOptionsList();
+            updateStatus();
+            document.getElementById('emailOptions').style.display = option === 'individual+email' ? 'block' : 'none';
+        }
+
+        function updateSelectedOptionsList() {
+            const list = document.getElementById('selectedOptionsList');
+            list.innerHTML = '';
+            if (!selectedGenerationOption) { list.innerHTML = '<div style="color:var(--text-light);font-style:italic;padding:10px;font-size:13px;">No generation option selected</div>'; return; }
+            const labels = { batch: 'Whole Batch PPT', individual: 'Individual Student PPTs', 'individual+email': 'Individual PPTs + Auto Email' };
+            const icons = { batch: 'users', individual: 'user', 'individual+email': 'envelope' };
+            const cls = { batch: 'option-batch', individual: 'option-individual', 'individual+email': 'option-email' };
+            const div = document.createElement('div');
+            div.className = 'selected-option';
+            div.innerHTML = `<div class="option-icon ${cls[selectedGenerationOption]}"><i class="fas fa-${icons[selectedGenerationOption]}"></i></div><span>${labels[selectedGenerationOption]}</span>`;
+            list.appendChild(div);
+        }
+
+        function updateStatus() {
+            const hasFile = uploadedFileName !== null;
+            const hasOption = selectedGenerationOption !== null;
+            const hasPptName = document.getElementById('pptName').value.trim().length > 0;
+            const ready = hasFile && hasOption && hasPptName;
+            document.getElementById('generateBtn').disabled = !ready;
+            document.getElementById('previewBtn').disabled = !pptGenerated;
+            document.getElementById('emailOptionsBtn').disabled = !pptGenerated || selectedGenerationOption === 'batch';
+            if (ready) {
+                document.getElementById('statusText').textContent = 'Ready to generate';
+                document.getElementById('statusDot').className = 'status-dot active';
+                document.getElementById('overallStatusText').textContent = 'All requirements met';
+                document.getElementById('overallStatusDot').className = 'status-dot active';
+            } else {
+                const missing = [];
+                if (!hasFile) missing.push('upload file');
+                if (!hasOption) missing.push('select generation option');
+                if (!hasPptName) missing.push('enter PPT name');
+                document.getElementById('statusText').textContent = `Requires: ${missing.join(', ')}`;
+                document.getElementById('statusDot').className = 'status-dot';
+                document.getElementById('overallStatusText').textContent = `Complete ${missing.join(', ')}`;
+                document.getElementById('overallStatusDot').className = 'status-dot';
+            }
+        }
+
+        // =========================================================================
+        // PPT GENERATION
+        // =========================================================================
+        function generatePPT() {
+            if (!uploadedFileName || !selectedGenerationOption) { showToast('Please select all required options', 'error'); return; }
+            pptFileName = document.getElementById('pptName').value.trim();
+            if (!pptFileName) { showToast('Please enter a PPT file name', 'error'); return; }
+            const pptType = selectedGenerationOption === 'batch' ? 'batch' : 'individual';
+            showLoading('Generating Report...');
+            fetch(`${window.API}/generate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ filename: uploadedFileName, type: pptType, ppt_name: pptFileName })
+            })
+                .then(r => r.json())
+                .then(data => {
+                    hideLoading();
+                    if (data.success) {
+                        pptGenerated = true; pptData = data;
+                        window.studentFilenames = {};
+                        if (data.students && Array.isArray(data.students)) {
+                            data.students.forEach(s => { window.studentFilenames[s.name] = s.filename; });
+                        }
+                        document.getElementById('emailOptionsBtn').disabled = false;
+                        document.getElementById('previewBtn').disabled = false;
+                        showToast(data.message, 'success');
+                        updateStatus();
+                        if (selectedGenerationOption === 'individual+email') setTimeout(sendEmailsToAll, 1000);
+                    } else { showToast(data.error || 'Generation failed', 'error'); }
+                })
+                .catch(err => { hideLoading(); showToast('Generation failed: ' + err.message, 'error'); });
+        }
+
+        // =========================================================================
+        // ✅ FIXED PREVIEW — renders actual PPT slide visuals
+        // =========================================================================
+        function openPreviewModal() {
+            if (!pptGenerated || !pptData) { showToast('Please generate the PPT first', 'error'); return; }
+            document.getElementById('previewPlaceholder').style.display = 'block';
+            document.getElementById('previewPlaceholder').innerHTML = `<div class="loading-spinner" style="margin:0 auto 20px;"></div><p style="color:var(--dark-blue);font-weight:600;">Loading preview...</p>`;
+            document.getElementById('previewContainer').style.display = 'none';
+            document.getElementById('previewDownloadBtn').style.display = 'none';
+            document.getElementById('previewModal').style.display = 'flex';
+            loadPPTPreview();
+        }
+
+        function closePreviewModal() {
+            document.getElementById('previewModal').style.display = 'none';
+        }
+
+        function loadPPTPreview() {
+            if (!pptData?.download_url) { showFallbackPreview('No PPT file available'); return; }
+            const url = pptData.download_url.startsWith('/') ? window.API + pptData.download_url : pptData.download_url;
+            fetch(url)
+                .then(r => { if (!r.ok) throw new Error('Failed to fetch PPT'); return r.arrayBuffer(); })
+                .then(buf => renderPptx(buf))
+                .catch(err => { console.error('Preview error:', err); showFallbackPreview('Could not load PPT file. You can still download it.'); });
+        }
+
+        function showFallbackPreview(msg) {
+            document.getElementById('previewPlaceholder').innerHTML = `
+            <div style="text-align:center;padding:40px;">
+                <i class="fas fa-exclamation-triangle" style="font-size:64px;color:var(--accent-red);margin-bottom:20px;"></i>
+                <h3>Preview Unavailable</h3>
+                <p style="margin:15px 0;color:var(--text-light);">${msg}</p>
+                <button class="preview-download-btn" onclick="downloadGeneratedPPT()"><i class="fas fa-download"></i> Download PPT</button>
+            </div>`;
+            document.getElementById('previewPlaceholder').style.display = 'block';
+            document.getElementById('previewContainer').style.display = 'none';
+            document.getElementById('previewDownloadBtn').style.display = 'flex';
+        }
+
+        // =========================================================================
+        // ✅ CORE FIX: renderPptx — renders actual slide visuals with
+        //    absolute-positioned shapes, real fonts sizes, images & backgrounds
+        // =========================================================================
+        async function renderPptx(buffer) {
+            try {
+                const container = document.getElementById('previewContent');
+                container.innerHTML = '';
+
+                // ── 1. Unzip outer buffer (could be .pptx directly or a .zip of .pptx files)
+                const outerZip = await JSZip.loadAsync(buffer);
+                let pptxZip = outerZip;
+                let previewNote = '';
+
+                if (!outerZip.file('ppt/presentation.xml')) {
+                    const pptxFiles = Object.keys(outerZip.files).filter(n => n.endsWith('.pptx'));
+                    if (!pptxFiles.length) throw new Error('No PPTX file found inside ZIP');
+                    const innerBuf = await outerZip.file(pptxFiles[0]).async('arraybuffer');
+                    pptxZip = await JSZip.loadAsync(innerBuf);
+                    previewNote = `Showing: <strong>${pptxFiles[0]}</strong> (${pptxFiles.length} file${pptxFiles.length > 1 ? 's' : ''} in ZIP)`;
+                }
+
+                // ── 2. Slide dimensions from presentation.xml
+                let EMU_W = 9144000, EMU_H = 5143500; // default 10"×5.63" (16:9)
+                const presFile = pptxZip.file('ppt/presentation.xml');
+                if (presFile) {
+                    const pt = await presFile.async('text');
+                    const m = pt.match(/p:sldSz[^>]*cx="(\d+)"[^>]*cy="(\d+)"/);
+                    if (m) { EMU_W = +m[1]; EMU_H = +m[2]; }
+                }
+
+                // Reference render dimensions
+                const RENDER_W = 1280;
+                const RENDER_H = Math.round(RENDER_W * EMU_H / EMU_W);
+                // Convert EMU value → render pixels
+                const emu = n => Math.round(+n * RENDER_W / EMU_W);
+                // Convert PPTX font size (hundredths of pt) → render pixels
+                // 1pt = 12700 EMU → 12700*RENDER_W/EMU_W px at render scale
+                const emuPt = sz => Math.max(7, Math.round((+sz / 100) * 12700 * RENDER_W / EMU_W));
+
+                // ── 3. Load theme colors
+                const TC = {};
+                const themeFile = pptxZip.file('ppt/theme/theme1.xml');
+                if (themeFile) {
+                    const tt = await themeFile.async('text');
+                    ['dk1', 'lt1', 'dk2', 'lt2', 'accent1', 'accent2', 'accent3', 'accent4', 'accent5', 'accent6'].forEach(k => {
+                        let m = new RegExp(`<a:${k}>[\\s\\S]{0,300}?<a:srgbClr val="([0-9a-fA-F]{6})"`).exec(tt);
+                        if (!m) m = new RegExp(`<a:${k}>[\\s\\S]{0,300}?lastClr="([0-9a-fA-F]{6})"`).exec(tt);
+                        if (m) TC[k] = '#' + m[1];
+                    });
+                }
+
+                // Helper: extract fill color from a DOM element's solidFill child
+                function getFill(el) {
+                    const solid = el.getElementsByTagNameNS('*', 'solidFill')[0];
+                    if (!solid) return '';
+                    const rgb = solid.getElementsByTagNameNS('*', 'srgbClr')[0];
+                    if (rgb) return '#' + (rgb.getAttribute('val') || '');
+                    const sch = solid.getElementsByTagNameNS('*', 'schemeClr')[0];
+                    if (sch) return TC[sch.getAttribute('val')] || '';
+                    return '';
+                }
+
+                // ── 4. Sort slide files numerically
+                const slideFiles = [];
+                pptxZip.forEach((path, f) => {
+                    if (/^ppt\/slides\/slide\d+\.xml$/.test(path)) slideFiles.push({ path, f });
+                });
+                slideFiles.sort((a, b) => +a.path.match(/(\d+)/)[1] - +b.path.match(/(\d+)/)[1]);
+                if (!slideFiles.length) throw new Error('No slides found in PPTX');
+
+                const parser = new DOMParser();
+
+                // Update modal header text
+                document.getElementById('previewTitle').textContent = pptFileName + ' – Visual Preview';
+                document.getElementById('previewSubtitle').textContent =
+                    `${slideFiles.length} slide${slideFiles.length !== 1 ? 's' : ''} · ${RENDER_W}×${RENDER_H}px render`;
+
+                // ── 5. Render each slide
+                for (let si = 0; si < slideFiles.length; si++) {
+                    const slideText = await slideFiles[si].f.async('text');
+                    const slideDoc = parser.parseFromString(slideText, 'text/xml');
+
+                    // ── Load image map from slide relationships
+                    const relPath = slideFiles[si].path
+                        .replace('ppt/slides/', 'ppt/slides/_rels/')
+                        .replace('.xml', '.xml.rels');
+                    const imgMap = {};
+                    const relFile = pptxZip.file(relPath);
+                    if (relFile) {
+                        const relDoc = parser.parseFromString(await relFile.async('text'), 'text/xml');
+                        for (const rel of relDoc.querySelectorAll('Relationship')) {
+                            if (!(rel.getAttribute('Type') || '').includes('image')) continue;
+                            const id = rel.getAttribute('Id');
+                            const target = rel.getAttribute('Target') || '';
+                            // Resolve relative path: ../media/image1.png → ppt/media/image1.png
+                            let abs = ('ppt/slides/' + target).replace(/[^/]+\/\.\.\//g, '');
+                            let imgFile = pptxZip.file(abs);
+                            if (!imgFile && abs.startsWith('ppt/media/')) {
+                                imgFile = pptxZip.file(abs.replace('ppt/media/', 'ppt/media/'));
+                            }
+                            if (!imgFile) continue;
+                            const ext = target.split('.').pop().toLowerCase();
+                            const mime = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', gif: 'image/gif', bmp: 'image/bmp', svg: 'image/svg+xml' }[ext] || 'image/png';
+                            imgMap[id] = `data:${mime};base64,${await imgFile.async('base64')}`;
+                        }
+                    }
+
+                    // ── Slide background color
+                    let bgColor = '#ffffff';
+                    const bgMatch = slideText.match(/<p:bg>[\s\S]{0,600}?<a:srgbClr val="([0-9a-fA-F]{6})"/);
+                    if (bgMatch) bgColor = '#' + bgMatch[1];
+
+                    // ── Build slide wrapper DOM
+                    const slideWrapper = document.createElement('div');
+                    slideWrapper.className = 'slide-wrapper';
+
+                    const slideLabel = document.createElement('div');
+                    slideLabel.className = 'slide-label';
+                    slideLabel.innerHTML = `
+                    <span><i class="fas fa-file-powerpoint" style="margin-right:8px;opacity:.8;"></i>Slide ${si + 1} of ${slideFiles.length}</span>
+                    <span style="opacity:.65;font-weight:500;font-size:12px;">${pptFileName}</span>`;
+
+                    // Aspect-ratio container (height set dynamically after scale)
+                    const aspectBox = document.createElement('div');
+                    aspectBox.className = 'slide-aspect-box';
+                    aspectBox.style.background = bgColor;
+
+                    // Fixed-size inner canvas (will be CSS-scaled to fit)
+                    const canvas = document.createElement('div');
+                    canvas.className = 'slide-canvas';
+                    canvas.style.width = RENDER_W + 'px';
+                    canvas.style.height = RENDER_H + 'px';
+                    canvas.style.background = bgColor;
+                    canvas.dataset.rw = RENDER_W;
+                    canvas.dataset.rh = RENDER_H;
+
+                    // ── Render p:sp (text shapes & boxes)
+                    for (const sp of slideDoc.getElementsByTagNameNS('*', 'sp')) {
+                        const xfrm = sp.getElementsByTagNameNS('*', 'xfrm')[0];
+                        if (!xfrm) continue;
+                        const off = xfrm.getElementsByTagNameNS('*', 'off')[0];
+                        const ext = xfrm.getElementsByTagNameNS('*', 'ext')[0];
+                        if (!off || !ext) continue;
+
+                        const x = emu(off.getAttribute('x'));
+                        const y = emu(off.getAttribute('y'));
+                        const w = emu(ext.getAttribute('cx'));
+                        const h = emu(ext.getAttribute('cy'));
+                        if (w <= 0 || h <= 0) continue;
+
+                        // Shape fill (from spPr, not txBody)
+                        const spPr = sp.getElementsByTagNameNS('*', 'spPr')[0];
+                        const noFill = spPr && spPr.getElementsByTagNameNS('*', 'noFill').length > 0;
+                        const fill = (!noFill && spPr) ? getFill(spPr) : '';
+
+                        const div = document.createElement('div');
+                        div.style.cssText = `
+                        position:absolute;
+                        left:${x}px; top:${y}px;
+                        width:${w}px; height:${h}px;
+                        overflow:hidden;
+                        box-sizing:border-box;
+                        ${fill ? `background:${fill};` : ''}
+                    `;
+
+                        // ── Text body
+                        const txBody = sp.getElementsByTagNameNS('*', 'txBody')[0];
+                        if (txBody) {
+                            // Vertical alignment from bodyPr anchor attribute
+                            const bodyPr = txBody.getElementsByTagNameNS('*', 'bodyPr')[0];
+                            const anchor = bodyPr ? (bodyPr.getAttribute('anchor') || 't') : 't';
+                            div.style.display = 'flex';
+                            div.style.flexDirection = 'column';
+                            div.style.justifyContent = anchor === 'ctr' ? 'center' : anchor === 'b' ? 'flex-end' : 'flex-start';
+                            div.style.padding = '2px 5px';
+
+                            for (const para of txBody.getElementsByTagNameNS('*', 'p')) {
+                                const pPr = para.getElementsByTagNameNS('*', 'pPr')[0];
+                                const algn = pPr ? (pPr.getAttribute('algn') || 'l') : 'l';
+                                const align = algn === 'ctr' ? 'center' : algn === 'r' ? 'right' : algn === 'just' ? 'justify' : 'left';
+
+                                // Paragraph-level line spacing (spcPct or spcPts)
+                                let lhMultiple = 1.15;
+                                const lnSpc = pPr && pPr.getElementsByTagNameNS('*', 'lnSpc')[0];
+                                if (lnSpc) {
+                                    const spcPct = lnSpc.getElementsByTagNameNS('*', 'spcPct')[0];
+                                    if (spcPct) lhMultiple = +spcPct.getAttribute('val') / 100000;
+                                }
+
+                                const pDiv = document.createElement('div');
+                                pDiv.style.cssText = `text-align:${align};line-height:${lhMultiple};white-space:pre-wrap;word-break:break-word;`;
+
+                                let hasRuns = false;
+                                for (const run of para.getElementsByTagNameNS('*', 'r')) {
+                                    const tEl = run.getElementsByTagNameNS('*', 't')[0];
+                                    if (!tEl) continue;
+                                    const text = tEl.textContent;
+                                    // Note: preserve space attribute
+                                    // if (tEl.getAttribute('xml:space') === 'preserve') preserve spaces
+
+                                    const rPr = run.getElementsByTagNameNS('*', 'rPr')[0];
+                                    const szAttr = rPr ? rPr.getAttribute('sz') : null;
+                                    const bold = rPr ? rPr.getAttribute('b') === '1' : false;
+                                    const italic = rPr ? rPr.getAttribute('i') === '1' : false;
+                                    const under = rPr ? rPr.getAttribute('u') && rPr.getAttribute('u') !== 'none' : false;
+                                    const px = szAttr ? emuPt(szAttr) : Math.round(RENDER_H / 45);
+                                    const color = rPr ? getFill(rPr) : '';
+
+                                    const span = document.createElement('span');
+                                    span.style.cssText = `
+                                    font-size:${px}px;
+                                    font-family:'Segoe UI',Calibri,Arial,sans-serif;
+                                    ${bold ? 'font-weight:700;' : ''}
+                                    ${italic ? 'font-style:italic;' : ''}
+                                    ${under ? 'text-decoration:underline;' : ''}
+                                    ${color ? `color:${color};` : 'color:#333;'}
+                                `;
+                                    span.textContent = text;
+                                    pDiv.appendChild(span);
+                                    hasRuns = true;
+                                }
+
+                                if (hasRuns) {
+                                    div.appendChild(pDiv);
+                                } else {
+                                    // Empty paragraph = small spacer
+                                    const spacer = document.createElement('div');
+                                    spacer.style.height = Math.round(RENDER_H / 80) + 'px';
+                                    div.appendChild(spacer);
+                                }
+                            }
+                        }
+
+                        if (div.children.length || fill) canvas.appendChild(div);
+                    }
+
+                    // ── Render p:pic (images)
+                    for (const pic of slideDoc.getElementsByTagNameNS('*', 'pic')) {
+                        const blipFill = pic.getElementsByTagNameNS('*', 'blipFill')[0];
+                        if (!blipFill) continue;
+                        const blip = blipFill.getElementsByTagNameNS('*', 'blip')[0];
+                        if (!blip) continue;
+
+                        // r:embed attribute (namespace-aware)
+                        const rId = blip.getAttributeNS(
+                            'http://schemas.openxmlformats.org/officeDocument/2006/relationships', 'embed'
+                        ) || blip.getAttribute('r:embed');
+                        const src = imgMap[rId];
+                        if (!src) continue;
+
+                        const xfrm = pic.getElementsByTagNameNS('*', 'xfrm')[0];
+                        if (!xfrm) continue;
+                        const off = xfrm.getElementsByTagNameNS('*', 'off')[0];
+                        const ext = xfrm.getElementsByTagNameNS('*', 'ext')[0];
+                        if (!off || !ext) continue;
+
+                        const imgDiv = document.createElement('div');
+                        imgDiv.style.cssText = `
+                        position:absolute;
+                        left:${emu(off.getAttribute('x'))}px;
+                        top:${emu(off.getAttribute('y'))}px;
+                        width:${emu(ext.getAttribute('cx'))}px;
+                        height:${emu(ext.getAttribute('cy'))}px;
+                        overflow:hidden;
+                    `;
+                        const img = document.createElement('img');
+                        img.src = src;
+                        img.style.cssText = 'width:100%;height:100%;object-fit:contain;display:block;';
+                        img.onerror = () => imgDiv.remove();
+                        imgDiv.appendChild(img);
+                        canvas.appendChild(imgDiv);
+                    }
+
+                    // ── Render p:graphicFrame (charts / tables) as placeholder boxes
+                    for (const gf of slideDoc.getElementsByTagNameNS('*', 'graphicFrame')) {
+                        const xfrm = gf.getElementsByTagNameNS('*', 'xfrm')[0];
+                        if (!xfrm) continue;
+                        const off = xfrm.getElementsByTagNameNS('*', 'off')[0];
+                        const ext = xfrm.getElementsByTagNameNS('*', 'ext')[0];
+                        if (!off || !ext) continue;
+
+                        const w = emu(ext.getAttribute('cx'));
+                        const h = emu(ext.getAttribute('cy'));
+                        if (w < 10 || h < 10) continue;
+
+                        const gDiv = document.createElement('div');
+                        gDiv.style.cssText = `
+                        position:absolute;
+                        left:${emu(off.getAttribute('x'))}px;
+                        top:${emu(off.getAttribute('y'))}px;
+                        width:${w}px; height:${h}px;
+                        border:2px dashed rgba(74,108,247,.35);
+                        border-radius:4px;
+                        background:rgba(74,108,247,.04);
+                        display:flex;align-items:center;justify-content:center;
+                        color:#4A6CF7;
+                        font-size:${Math.round(RENDER_H / 38)}px;
+                        font-weight:600;
+                        font-family:Segoe UI,sans-serif;
+                    `;
+                        gDiv.innerHTML = '<i class="fas fa-chart-bar" style="margin-right:8px;"></i>Chart / Table';
+                        canvas.appendChild(gDiv);
+                    }
+
+                    // ── Assemble slide DOM
+                    aspectBox.appendChild(canvas);
+                    slideWrapper.appendChild(slideLabel);
+                    slideWrapper.appendChild(aspectBox);
+                    container.appendChild(slideWrapper);
+                }
+
+                // ── 6. Scale canvases to fit their containers (responsive)
+                const scaleAll = () => {
+                    container.querySelectorAll('.slide-canvas[data-rw]').forEach(c => {
+                        const pw = c.parentElement.offsetWidth;
+                        if (!pw) return;
+                        const sc = pw / +c.dataset.rw;
+                        c.style.transform = `scale(${sc})`;
+                        c.parentElement.style.height = (+c.dataset.rh * sc) + 'px';
+                    });
+                };
+                // Run immediately then watch for resize
+                setTimeout(scaleAll, 60);
+                if (window._slideResizeObserver) window._slideResizeObserver.disconnect();
+                window._slideResizeObserver = new ResizeObserver(scaleAll);
+                window._slideResizeObserver.observe(container);
+
+                // ── 7. Show preview container
+                document.getElementById('previewPlaceholder').style.display = 'none';
+                document.getElementById('previewContainer').style.display = 'block';
+                document.getElementById('previewDownloadBtn').style.display = 'flex';
+
+                // ── 8. Fill info panel
+                const fileType = pptData.type === 'batch' ? 'Batch PPTX (all students)' : 'Individual PPTs (ZIP)';
+                document.getElementById('previewInfo').innerHTML = `
+                <h4 style="color:var(--dark-blue);margin-bottom:12px;display:flex;align-items:center;gap:10px;">
+                    <i class="fas fa-info-circle"></i> Presentation Details
+                </h4>
+                ${previewNote ? `<p style="margin-bottom:12px;font-size:13px;color:var(--primary-blue);">${previewNote}</p>` : ''}
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;font-size:14px;">
+                    <div><strong>Type:</strong> ${fileType}</div>
+                    <div><strong>Slides:</strong> ${slideFiles.length}</div>
+                    <div><strong>Slide size:</strong> ${RENDER_W}×${RENDER_H}px</div>
+                    <div><strong>File:</strong> ${pptData.filename || pptFileName}</div>
+                    <div><strong>Status:</strong> <span style="color:var(--accent-green);font-weight:600;">✓ Ready for Download</span></div>
+                </div>`;
+
+            } catch (err) {
+                console.error('PPTX render error:', err);
+                showFallbackPreview('Could not render PPT: ' + err.message);
+            }
+        }
+
+        function downloadGeneratedPPT() {
+            if (!pptData?.download_url) { showToast('No PPT file available for download', 'error'); return; }
+            const url = pptData.download_url.startsWith('/') ? window.API + pptData.download_url : pptData.download_url;
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = pptData.filename || pptFileName + (pptData.type === 'batch' ? '.pptx' : '.zip');
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('PPT download started', 'success');
+        }
+
+        // =========================================================================
+        // STUDENT SELECTION MODAL
+        // =========================================================================
+        function openStudentSelectionModal() {
+            if (!pptGenerated || !pptData) { showToast('Please generate the PPT first', 'error'); return; }
+            document.getElementById('studentModal').style.display = 'flex';
+            showOnlySelected = false; searchFilter = '';
+            document.getElementById('studentSearch').value = '';
+            const btn = document.querySelector('.show-selected-btn');
+            if (btn) { btn.classList.remove('active'); btn.innerHTML = '<i class="fas fa-eye"></i> Show Selected'; }
+            renderStudentList(); updateStatistics();
+        }
+
+        function closeStudentModal() { document.getElementById('studentModal').style.display = 'none'; }
+
+        function renderStudentList() {
+            const studentList = document.getElementById('studentList');
+            studentList.innerHTML = '';
+            filteredStudents = getFilteredStudents();
+            if (!filteredStudents.length) {
+                studentList.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-light);"><i class="fas fa-user-graduate" style="font-size:48px;margin-bottom:20px;opacity:.5;"></i><h4>No students found</h4></div>`;
+                return;
+            }
+            filteredStudents.forEach(student => {
+                const isSelected = selectedStudents.includes(student.name);
+                const hasEmail = student.email && student.email.includes('@');
+                const tpl = studentEmailTemplates[student.name] || { type: 'default', isCustom: false };
+                const tplDisplay = tpl.isCustom ? 'Custom' : tpl.type.charAt(0).toUpperCase() + tpl.type.slice(1);
+                let dName = escapeHtml(student.name), dEmail = escapeHtml(student.email || 'No email');
+                if (searchFilter) {
+                    const rx = new RegExp(`(${escapeRegExp(searchFilter)})`, 'gi');
+                    dName = dName.replace(rx, '<span class="highlight">$1</span>');
+                    dEmail = dEmail.replace(rx, '<span class="highlight">$1</span>');
+                }
+                const item = document.createElement('div');
+                item.className = `student-item ${isSelected ? 'selected' : ''}`;
+                item.innerHTML = `
+                <div class="student-checkbox"><input type="checkbox" ${isSelected ? 'checked' : ''} ${!hasEmail ? 'disabled' : ''} onchange="toggleStudentSelection('${student.name.replace(/'/g, "\\'")}', this.checked)"></div>
+                <div class="student-name">${dName}</div>
+                <div class="student-email">${dEmail}</div>
+                <div><span class="student-template-display">${tplDisplay}</span></div>
+                <div class="student-status ${hasEmail ? 'status-has-email' : 'status-no-email'}">${hasEmail ? '✓ Has Email' : '✗ No Email'}</div>
+                <div>${hasEmail ? `<button class="student-action-btn" onclick="openEmailEditor('${student.name.replace(/'/g, "\\'")}')"><i class="fas fa-edit"></i> Edit</button>` : ''}</div>`;
+                studentList.appendChild(item);
+            });
+            updateStatistics(); updateSelectedCount(); updateBulkActionButtons(); updateSelectAllCheckboxState();
+        }
+
+        function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+        function escapeRegExp(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+        function getFilteredStudents() {
+            let f = allStudents;
+            if (searchFilter) { const sl = searchFilter.toLowerCase(); f = f.filter(s => s.name.toLowerCase().includes(sl) || (s.email && s.email.toLowerCase().includes(sl))); }
+            if (showOnlySelected) f = f.filter(s => selectedStudents.includes(s.name));
+            return f;
+        }
+        function filterStudentList() { searchFilter = document.getElementById('studentSearch').value.toLowerCase(); renderStudentList(); }
+        function toggleShowOnlySelected() {
+            const btn = document.querySelector('.show-selected-btn');
+            showOnlySelected = !showOnlySelected;
+            btn.classList.toggle('active', showOnlySelected);
+            btn.innerHTML = showOnlySelected ? '<i class="fas fa-eye-slash"></i> Show All' : '<i class="fas fa-eye"></i> Show Selected';
+            renderStudentList();
+        }
+        function toggleAllStudents(checked) {
+            filteredStudents.forEach(s => {
+                if (!s.email || !s.email.includes('@')) return;
+                const idx = selectedStudents.indexOf(s.name);
+                if (checked && idx === -1) selectedStudents.push(s.name);
+                else if (!checked && idx > -1) selectedStudents.splice(idx, 1);
+            });
+            renderStudentList(); updateStatistics();
+        }
+        function selectAllVisibleStudents() { filteredStudents.forEach(s => { if (s.email && s.email.includes('@') && !selectedStudents.includes(s.name)) selectedStudents.push(s.name); }); renderStudentList(); updateStatistics(); }
+        function deselectAllStudents() { selectedStudents = []; renderStudentList(); updateStatistics(); }
+        function invertSelection() {
+            const we = filteredStudents.filter(s => s.email && s.email.includes('@'));
+            selectedStudents = we.filter(s => !selectedStudents.includes(s.name)).map(s => s.name);
+            renderStudentList(); updateStatistics();
+        }
+        function toggleStudentSelection(name, checked) {
+            const s = allStudents.find(s => s.name === name);
+            if (!s || !s.email || !s.email.includes('@')) return;
+            const idx = selectedStudents.indexOf(name);
+            if (checked && idx === -1) selectedStudents.push(name);
+            else if (!checked && idx > -1) selectedStudents.splice(idx, 1);
+            updateSelectAllCheckboxState(); renderStudentList();
+        }
+        function updateSelectAllCheckboxState() {
+            const cb = document.getElementById('selectAllCheckbox');
+            const we = filteredStudents.filter(s => s.email && s.email.includes('@'));
+            if (!we.length) { cb.checked = false; cb.indeterminate = false; return; }
+            const sc = we.filter(s => selectedStudents.includes(s.name)).length;
+            cb.checked = sc === we.length; cb.indeterminate = sc > 0 && sc < we.length;
+        }
+        function updateStatistics() {
+            document.getElementById('totalStudentsCount').textContent = allStudents.length;
+            document.getElementById('studentsWithEmailCount').textContent = allStudents.filter(s => s.email && s.email.includes('@')).length;
+            document.getElementById('selectedStudentsCount').textContent = selectedStudents.length;
+            document.getElementById('filteredStudentsCount').textContent = filteredStudents.length;
+        }
+        function updateSelectedCount() {
+            const el = document.getElementById('selectedCount');
+            const preview = document.getElementById('selectedStudentsPreview');
+            if (!selectedStudents.length) { el.innerHTML = '<span style="color:var(--text-light);">No students selected</span>'; preview.style.display = 'none'; }
+            else {
+                const total = allStudents.filter(s => s.email && s.email.includes('@')).length;
+                el.innerHTML = `<span style="color:var(--accent-green);font-weight:700;">${selectedStudents.length}</span> student${selectedStudents.length > 1 ? 's' : ''} selected${selectedStudents.length === total ? ' (All)' : ''}`;
+                updateSelectedStudentsPreview(); preview.style.display = 'block';
+            }
+            document.getElementById('sendSelectedBtn').disabled = selectedStudents.length === 0;
+        }
+        function updateSelectedStudentsPreview() {
+            const c = document.querySelector('#selectedStudentsPreview > div'); c.innerHTML = '';
+            selectedStudents.slice(0, 10).forEach(name => {
+                const chip = document.createElement('div'); chip.className = 'selected-student-chip';
+                chip.innerHTML = `<span>${escapeHtml(name)}</span><button class="remove-chip" onclick="deselectStudent('${name.replace(/'/g, "\\'")}')"><i class="fas fa-times"></i></button>`;
+                c.appendChild(chip);
+            });
+            if (selectedStudents.length > 10) { const m = document.createElement('div'); m.className = 'selected-student-chip'; m.innerHTML = `<span style="color:var(--text-light);">+${selectedStudents.length - 10} more</span>`; c.appendChild(m); }
+        }
+        function deselectStudent(name) { const i = selectedStudents.indexOf(name); if (i > -1) { selectedStudents.splice(i, 1); renderStudentList(); } }
+        function updateBulkActionButtons() { document.getElementById('bulkEditBtn').disabled = selectedStudents.length === 0; }
+        function bulkEditEmailTemplates() { if (!selectedStudents.length) return; if (selectedStudents.length === 1) openEmailEditor(selectedStudents[0]); else showToast('Bulk edit for ' + selectedStudents.length + ' students', 'info'); }
+
+        // =========================================================================
+        // EMAIL EDITOR
+        // =========================================================================
+        function openEmailEditor(studentName) {
+            if (!pptGenerated || !pptData) { showToast('Please generate the PPT first', 'error'); return; }
+            currentEditingStudent = studentName;
+            const student = allStudents.find(s => s.name === studentName);
+            if (!student) { showToast('Student not found', 'error'); return; }
+            document.getElementById('currentStudentName').textContent = studentName;
+            document.getElementById('editorStudentName').textContent = studentName;
+            document.getElementById('editorStudentEmail').textContent = student.email || 'No email';
+            document.getElementById('editorPPTStatus').textContent = pptGenerated ? 'Ready' : 'Not generated';
+            document.getElementById('previewToEmail').textContent = student.email || 'student@example.com';
+            let tpl = studentEmailTemplates[studentName] || { type: 'default', subject: emailTemplates.default.subject, body: emailTemplates.default.body, isCustom: false };
+            studentEmailTemplates[studentName] = tpl;
+            document.getElementById('customEmailSubject').value = tpl.subject;
+            document.getElementById('customEmailBody').value = tpl.body;
+            updateCharacterCount('subjectCount', tpl.subject.length, 100);
+            updateCharacterCount('bodyCount', tpl.body.length, 2000);
+            updateEmailPreview();
+            document.getElementById('emailEditorModal').style.display = 'flex';
+        }
+        function closeEmailEditorModal() { document.getElementById('emailEditorModal').style.display = 'none'; currentEditingStudent = null; }
+        function loadTemplate(type) {
+            if (!currentEditingStudent) return;
+            const tpl = emailTemplates[type]; if (!tpl) return;
+            document.getElementById('customEmailSubject').value = tpl.subject;
+            document.getElementById('customEmailBody').value = tpl.body;
+            updateCharacterCount('subjectCount', tpl.subject.length, 100);
+            updateCharacterCount('bodyCount', tpl.body.length, 2000);
+            updateEmailPreview();
+        }
+        function insertVariable(v) {
+            const ta = document.getElementById('customEmailBody'), s = ta.selectionStart, e = ta.selectionEnd;
+            ta.value = ta.value.substring(0, s) + v + ta.value.substring(e);
+            ta.focus(); ta.setSelectionRange(s + v.length, s + v.length);
+            updateCharacterCount('bodyCount', ta.value.length, 2000); updateEmailPreview();
+        }
+        function formatText(fmt) {
+            const ta = document.getElementById('customEmailBody'), s = ta.selectionStart, e = ta.selectionEnd, sel = ta.value.substring(s, e);
+            const wrap = { bold: `**${sel}**`, italic: `*${sel}*`, underline: `__${sel}__` };
+            ta.value = ta.value.substring(0, s) + wrap[fmt] + ta.value.substring(e);
+            updateCharacterCount('bodyCount', ta.value.length, 2000); updateEmailPreview();
+        }
+        function updateCharacterCount(id, len, max) {
+            const el = document.getElementById(id);
+            el.textContent = `${len}/${max} characters`;
+            el.className = len > max ? 'character-count error' : len > max * 0.9 ? 'character-count warning' : 'character-count';
+        }
+        function updateEmailPreview() {
+            const subject = document.getElementById('customEmailSubject').value;
+            const body = document.getElementById('customEmailBody').value;
+            const student = allStudents.find(s => s.name === currentEditingStudent);
+            const rep = t => t
+                .replace(/{student_name}/g, student?.name || 'Student Name')
+                .replace(/{student_email}/g, student?.email || 'student@example.com')
+                .replace(/{assessment_date}/g, new Date().toLocaleDateString())
+                .replace(/{instructor_name}/g, 'Prof. Smith')
+                .replace(/{college_name}/g, 'University of Example')
+                .replace(/{course_name}/g, 'Communication Skills');
+            document.getElementById('previewSubject').textContent = rep(subject);
+            document.getElementById('previewEmailContent').innerHTML = rep(body)
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/__(.*?)__/g, '<u>$1</u>').replace(/\n/g, '<br>');
+        }
+        function saveCustomEmail() {
+            if (!currentEditingStudent) { showToast('Error: No student selected', 'error'); return; }
+            const subject = document.getElementById('customEmailSubject').value.trim();
+            const body = document.getElementById('customEmailBody').value.trim();
+            if (!subject || !body) { showToast('Please fill in both subject and body', 'error'); return; }
+            studentEmailTemplates[currentEditingStudent] = { type: 'custom', subject, body, isCustom: true };
+            showToast('Email template saved for ' + currentEditingStudent, 'success');
+            closeEmailEditorModal(); renderStudentList();
+        }
+        function saveAsTemplate() {
+            const subject = document.getElementById('customEmailSubject').value.trim();
+            const body = document.getElementById('customEmailBody').value.trim();
+            if (!subject || !body) { showToast('Please fill in both subject and body', 'error'); return; }
+            const name = prompt('Enter a name for this template:');
+            if (name) showToast('Template saved as: ' + name, 'success');
+        }
+
+        // =========================================================================
+        // EMAIL SENDING
+        // =========================================================================
+        function showEmailOptions() {
+            if (!pptGenerated || !pptData) { showToast('Please generate the PPT first', 'error'); return; }
+            document.getElementById('emailOptions').style.display = 'block';
+        }
+        function sendEmailsToAll() {
+            if (!pptGenerated || !pptData) { showToast('Please generate the PPT first', 'error'); return; }
+            const subject = document.getElementById('emailSubject')?.value?.trim();
+            if (!subject) { showToast('Please enter an email subject', 'error'); return; }
+            const withEmail = allStudents.filter(s => s.email && s.email.includes('@')).map(s => s.name);
+            if (!withEmail.length) { showToast('No students with valid email addresses', 'error'); return; }
+            const customData = {};
+            withEmail.forEach(name => { const t = studentEmailTemplates[name]; if (t) customData[name] = { subject: t.subject, body: t.body, type: t.type, isCustom: t.isCustom || false }; });
+            sendBulkEmails(withEmail, customData);
+        }
+        function confirmStudentSelection() {
+            if (!selectedStudents.length) { showToast('Please select at least one student', 'error'); return; }
+            if (pptData.type !== 'individual' && pptData.type !== 'individual+email') { showToast('Email sending is only available for individual PPTs', 'error'); closeStudentModal(); return; }
+            if (!confirm(`Send emails to ${selectedStudents.length} selected students?`)) return;
+            closeStudentModal();
+            const customData = {};
+            selectedStudents.forEach(name => { const t = studentEmailTemplates[name]; if (t) customData[name] = { subject: t.subject, body: t.body, type: t.type, isCustom: t.isCustom || false }; });
+            sendBulkEmails(selectedStudents, customData);
+        }
+        function sendBulkEmails(studentNames, customEmailData) {
+            if (!pptGenerated || !pptData || !studentNames?.length) { showToast('No students selected', 'error'); return; }
+            openEmailProgressModal();
+            let successCount = 0, failCount = 0, index = 0;
+            const total = studentNames.length;
+            document.getElementById('emailProgressText').textContent = `Sending emails... 0/${total}`;
+            document.getElementById('emailProgressBar').style.width = '0%';
+            document.getElementById('emailLog').innerHTML = '';
+            function sendNext() {
+                if (index >= studentNames.length) {
+                    document.getElementById('emailProgressBar').style.width = '100%';
+                    document.getElementById('emailProgressText').textContent = `Complete! ${successCount} sent, ${failCount} failed`;
+                    document.getElementById('cancelEmailBtn').style.display = 'none';
+                    document.getElementById('closeEmailBtn').style.display = 'block';
+                    showToast(`Emails sent! ${successCount} successful, ${failCount} failed`, failCount === 0 ? 'success' : 'info');
+                    return;
+                }
+                const name = studentNames[index];
+                const student = allStudents.find(s => s.name === name);
+                const emailLog = document.getElementById('emailLog');
+                if (!student || !student.email) {
+                    failCount++;
+                    const e = document.createElement('div'); e.className = 'log-entry log-error';
+                    e.innerHTML = `<div class="log-icon"><i class="fas fa-exclamation-circle"></i></div><div>✗ No email for ${name}</div>`;
+                    emailLog.appendChild(e); index++; setTimeout(sendNext, 500); return;
+                }
+                const tpl = customEmailData?.[name] || { subject: emailTemplates.default.subject, body: emailTemplates.default.body, type: 'default' };
+                const vars = t => t
+                    .replace(/{student_name}/g, name).replace(/{student_email}/g, student.email)
+                    .replace(/{assessment_date}/g, new Date().toLocaleDateString())
+                    .replace(/{instructor_name}/g, 'Prof. Smith').replace(/{college_name}/g, 'University of Example').replace(/{course_name}/g, 'Communication Skills');
+                if (!window.studentFilenames || !window.studentFilenames[name]) {
+                    failCount++;
+                    const e = document.createElement('div'); e.className = 'log-entry log-error';
+                    e.innerHTML = `<div class="log-icon"><i class="fas fa-exclamation-circle"></i></div><div>✗ No PPT filename for ${name}</div>`;
+                    emailLog.appendChild(e); index++; setTimeout(sendNext, 800); return;
+                }
+                fetch(`${window.API}/send_custom_email`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
+                    body: JSON.stringify({ filename: uploadedFileName, student_name: name, student_email: student.email, email_subject: vars(tpl.subject), email_body: vars(tpl.body), ppt_filename: window.studentFilenames[name] })
+                })
+                    .then(r => r.json())
+                    .then(data => {
+                        const e = document.createElement('div');
+                        if (data.success) { successCount++; e.className = 'log-entry log-success'; e.innerHTML = `<div class="log-icon"><i class="fas fa-check-circle"></i></div><div>✓ Sent to ${name}</div>`; }
+                        else { failCount++; e.className = 'log-entry log-error'; e.innerHTML = `<div class="log-icon"><i class="fas fa-exclamation-circle"></i></div><div>✗ Failed: ${name} — ${data.error || 'Unknown error'}</div>`; }
+                        emailLog.appendChild(e); emailLog.scrollTop = emailLog.scrollHeight;
+                        const pct = Math.round(((index + 1) / total) * 100);
+                        document.getElementById('emailProgressBar').style.width = pct + '%';
+                        document.getElementById('emailProgressText').textContent = `Sending... ${index + 1}/${total} (${successCount} sent, ${failCount} failed)`;
+                        index++; setTimeout(sendNext, 800);
+                    })
+                    .catch(err => { failCount++; const e = document.createElement('div'); e.className = 'log-entry log-error'; e.innerHTML = `<div class="log-icon"><i class="fas fa-exclamation-circle"></i></div><div>✗ Error: ${name} — ${err.message}</div>`; emailLog.appendChild(e); index++; setTimeout(sendNext, 800); });
+            }
+            sendNext();
+        }
+        function openEmailProgressModal() {
+            document.getElementById('emailProgressModal').style.display = 'flex';
+            document.getElementById('emailProgressBar').style.width = '0%';
+            document.getElementById('emailProgressText').textContent = 'Preparing to send emails...';
+            document.getElementById('emailLog').innerHTML = '';
+            document.getElementById('cancelEmailBtn').style.display = 'block';
+            document.getElementById('closeEmailBtn').style.display = 'none';
+        }
+        function closeEmailProgressModal() { document.getElementById('emailProgressModal').style.display = 'none'; emailSendingInProgress = false; }
+        function cancelEmailSending() { emailSendingInProgress = false; closeEmailProgressModal(); showToast('Email sending cancelled', 'info'); }
+
+        // =========================================================================
+        // UTILITIES
+        // =========================================================================
+        function showLoading(msg) { document.getElementById('loadingText').textContent = msg; document.getElementById('loadingOverlay').style.display = 'flex'; }
+        function hideLoading() { document.getElementById('loadingOverlay').style.display = 'none'; }
+        function showToast(message, type = 'success') {
+            const t = document.createElement('div'); t.className = `toast ${type}`;
+            t.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i><span>${message}</span>`;
+            document.body.appendChild(t);
+            setTimeout(() => { t.style.animation = 'toastSlideIn .3s ease-out reverse'; setTimeout(() => t.remove(), 300); }, 3000);
+        }
+        function initializeDragAndDrop() {
+            const area = document.getElementById('uploadArea');
+            area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('dragover'); });
+            area.addEventListener('dragleave', () => area.classList.remove('dragover'));
+            area.addEventListener('drop', e => { e.preventDefault(); area.classList.remove('dragover'); if (e.dataTransfer.files.length) handleFileSelect({ target: { files: e.dataTransfer.files } }); });
+        }
+        document.addEventListener('DOMContentLoaded', () => { initializeDragAndDrop(); updateStatus(); });
+    </script>
+</body>
+
+</html>
